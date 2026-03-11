@@ -1,7 +1,5 @@
 import yt_dlp
 import os
-import asyncio
-from aiohttp import web
 from pyrogram import Client, filters
 from pyrogram.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
 from os import getenv
@@ -504,22 +502,5 @@ async def handle_text(client, message):
     # ── Default ──
     await message.reply("👇 Press the button below to start.", reply_markup=main_keyboard())
 
-async def health(request):
-    return web.Response(text="OK")
-
-async def start_web():
-    app_web = web.Application()
-    app_web.router.add_get("/", health)
-    runner = web.AppRunner(app_web)
-    await runner.setup()
-    site = web.TCPSite(runner, "0.0.0.0", 8080)
-    await site.start()
-    print("Web server running on port 8080")
-
-async def main():
-    await start_web()
-    await app.start()
-    print("Bot is running...")
-    await asyncio.get_event_loop().run_forever()
-
-asyncio.run(main())
+print("Bot is running...")
+app.run()
