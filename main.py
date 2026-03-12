@@ -24,7 +24,7 @@ async def log_download(client, user_id, username, url):
             f"🔗 URL: {url}\n"
         )
     except Exception as e:
-        pass
+        print(str(e))
 user_state = {}
 
 SILENT_LOGGER = type("L", (), {
