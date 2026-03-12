@@ -258,11 +258,13 @@ async def handle_text(client, message):
 
     # ── Awaiting URL ──
     if state["step"] == "awaiting_url":
+        print(f"URL received: {text}") #      <----------------------------------------------------------
         if not is_valid_youtube_url(text):
             await message.reply("✘ Invalid URL. Please send a valid YouTube link.")
             return
 
         text = clean_url(text)
+        print(f"Calling log_download for {user_id}")#      <----------------------------------------------------------
         await log_download(client, user_id, message.from_user.username, text)
         
         msg = await message.reply("🔍 Fetching info...")
