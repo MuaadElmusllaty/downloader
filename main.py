@@ -4,6 +4,8 @@ from pyrogram import Client, filters
 from pyrogram.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
 from os import getenv
 from dotenv import load_dotenv
+import static_ffmpeg
+static_ffmpeg.add_paths()
 load_dotenv()
 
 API_ID = int(getenv("API_ID"))
