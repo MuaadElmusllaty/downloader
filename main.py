@@ -14,7 +14,7 @@ BOT_TOKEN = getenv("BOT_TOKEN")
 
 app = Client("mybot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
 
-LOG_CHANNEL = str(getenv("LOG_CHANNEL"))
+LOG_CHANNEL = "-1003838799552"
 
 async def log_download(client, user_id, username, url):
     try:
