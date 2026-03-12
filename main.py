@@ -176,10 +176,12 @@ async def download_playlist(message, user_id, state, height=None, audio_fmt=None
         if height:
             ydl_opts = {
                 "format": (
-                    f"bestvideo[height={height}][vcodec^=av01]+bestaudio[ext=m4a]/"
-                    f"bestvideo[height={height}][vcodec^=vp9]+bestaudio[ext=m4a]/"
-                    f"bestvideo[height={height}]+bestaudio"
-                ),
+                 f"bestvideo[height<={height}][vcodec^=av01]+bestaudio[ext=m4a]/"
+                 f"bestvideo[height<={height}][vcodec^=vp9]+bestaudio[ext=m4a]/"
+                 f"bestvideo[height<={height}]+bestaudio/"
+                 f"best[height<={height}]/"
+                 f"best"
+            ),
                 "merge_output_format": "mp4",
                 "outtmpl": "/tmp/%(title)s.%(ext)s",
                 "quiet": True,
