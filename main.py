@@ -4,27 +4,27 @@ from pyrogram import Client, filters
 from pyrogram.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
 from os import getenv
 from dotenv import load_dotenv
-import static_ffmpeg
-static_ffmpeg.add_paths()
 load_dotenv()
 
 API_ID = int(getenv("API_ID"))
 API_HASH = getenv("API_HASH")
 BOT_TOKEN = getenv("BOT_TOKEN")
+LOG_CHANNEL = str(getenv("LOG_CHANNEL"))
+
 
 app = Client("mybot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
 
-LOG_CHANNEL = "-1003838799552"
 
 async def log_download(client, user_id, username, url):
     try:
+        print(f"📤 Logging download for user {username}")
         await client.send_message(
             LOG_CHANNEL,
             f"👤 User: {user_id} (@{username or 'no username'})\n"
             f"🔗 URL: {url}\n"
         )
     except Exception as e:
-        print(str(e))
+        print(f"✘ Failed to log download: {str(e)}")
 user_state = {}
 
 SILENT_LOGGER = type("L", (), {
@@ -176,12 +176,12 @@ async def download_playlist(message, user_id, state, height=None, audio_fmt=None
         if height:
             ydl_opts = {
                 "format": (
-                 f"bestvideo[height<={height}][vcodec^=av01]+bestaudio[ext=m4a]/"
-                 f"bestvideo[height<={height}][vcodec^=vp9]+bestaudio[ext=m4a]/"
-                 f"bestvideo[height<={height}]+bestaudio/"
-                 f"best[height<={height}]/"
-                 f"best"
-            ),
+                   f"bestvideo[height<={height}][vcodec^=av01]+bestaudio[ext=m4a]/"
+                   f"bestvideo[height<={height}][vcodec^=vp9]+bestaudio[ext=m4a]/"
+                   f"bestvideo[height<={height}]+bestaudio/"
+                   f"best[height<={height}]/"
+                   f"best"
+                  ),
                 "merge_output_format": "mp4",
                 "outtmpl": "/tmp/%(title)s.%(ext)s",
                 "quiet": True,
@@ -258,15 +258,15 @@ async def handle_text(client, message):
 
     # ── Awaiting URL ──
     if state["step"] == "awaiting_url":
-        print(f"URL received: {text}") #      <----------------------------------------------------------
+        print(f"🔗 URL received: {text}")
         if not is_valid_youtube_url(text):
             await message.reply("✘ Invalid URL. Please send a valid YouTube link.")
             return
-
-        text = clean_url(text)
-        print(f"Calling log_download for {user_id}")#      <----------------------------------------------------------
-        await log_download(client, user_id, message.from_user.username, text)
         
+        text = clean_url(text)
+        print(f"Calling log_download for {user_id}")
+        await log_download(client, user_id, message.from_user.username, text)
+
         msg = await message.reply("🔍 Fetching info...")
 
         if is_playlist(text):
@@ -508,13 +508,5 @@ async def handle_text(client, message):
     # ── Default ──
     await message.reply("👇 Press the button below to start.", reply_markup=main_keyboard())
 
-import asyncio
-
-async def main():
-    await app.start()
-    await app.get_chat(LOG_CHANNEL)
-    me = await app.get_me()
-    print(f"Bot is running as: {me.username}")
-    await asyncio.Future()
-
-asyncio.run(main())
+print("Bot is running...")
+app.run()
