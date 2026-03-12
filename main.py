@@ -1,9 +1,13 @@
 import yt_dlp
 import os
+import asyncio
+import static_ffmpeg
 from pyrogram import Client, filters
 from pyrogram.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
 from os import getenv
 from dotenv import load_dotenv
+
+static_ffmpeg.add_paths()
 load_dotenv()
 
 API_ID = int(getenv("API_ID"))
@@ -340,9 +344,11 @@ async def handle_text(client, message):
 
         ydl_opts = {
             "format": (
-                f"bestvideo[height={height}][vcodec^=av01]+bestaudio[ext=m4a]/"
-                f"bestvideo[height={height}][vcodec^=vp9]+bestaudio[ext=m4a]/"
-                f"bestvideo[height={height}]+bestaudio"
+                f"bestvideo[height<={height}][vcodec^=av01]+bestaudio[ext=m4a]/"
+                f"bestvideo[height<={height}][vcodec^=vp9]+bestaudio[ext=m4a]/"
+                f"bestvideo[height<={height}]+bestaudio/"
+                f"best[height<={height}]/"
+                f"best"
             ),
             "merge_output_format": "mp4",
             "outtmpl": "/tmp/%(title)s.%(ext)s",
@@ -508,5 +514,10 @@ async def handle_text(client, message):
     # ── Default ──
     await message.reply("👇 Press the button below to start.", reply_markup=main_keyboard())
 
-print("Bot is running...")
-app.run()
+async def main():
+    await app.start()
+    me = await app.get_me()
+    print(f"Bot is running as: {me.username}")
+    await asyncio.Future()
+
+asyncio.run(main())
