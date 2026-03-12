@@ -14,7 +14,7 @@ BOT_TOKEN = getenv("BOT_TOKEN")
 
 app = Client("mybot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
 
-LOG_CHANNEL = "-1003838799552"
+LOG_CHANNEL = -1003838799552
 
 async def log_download(client, user_id, username, url):
     try:
@@ -512,7 +512,7 @@ import asyncio
 
 async def main():
     await app.start()
-    await app.get_chat("-1003838799552")
+    await app.get_chat(LOG_CHANNEL)
     me = await app.get_me()
     print(f"Bot is running as: {me.username}")
     await asyncio.Future()
