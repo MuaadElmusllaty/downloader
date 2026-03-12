@@ -508,7 +508,13 @@ async def handle_text(client, message):
     # ── Default ──
     await message.reply("👇 Press the button below to start.", reply_markup=main_keyboard())
 
-app.get_chat(-1003838799552)
-me = app.get_me()
-print(f"Bot is running as {me}...")
-app.run()
+import asyncio
+
+async def main():
+    await app.start()
+    await app.get_chat(-1003838799552)  # resolve channel
+    me = await app.get_me()
+    print(f"Bot is running as: {me.username}")
+    await asyncio.Future()
+
+asyncio.run(main())
