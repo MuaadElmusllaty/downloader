@@ -508,5 +508,7 @@ async def handle_text(client, message):
     # ── Default ──
     await message.reply("👇 Press the button below to start.", reply_markup=main_keyboard())
 
-print("Bot is running...")
+app.get_chat(-1003838799552)
+me = app.get_me()
+print(f"Bot is running as {me}...")
 app.run()
