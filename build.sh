@@ -1,3 +1,3 @@
 #!/bin/bash
-apt-get update && apt-get install -y ffmpeg
 pip install -r requirements.txt
+python -c "import imageio; imageio.plugins.ffmpeg.download()"
