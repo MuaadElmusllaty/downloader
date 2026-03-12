@@ -1,6 +1,5 @@
 import yt_dlp
 import os
-import asyncio
 import static_ffmpeg
 from pyrogram import Client, filters
 from pyrogram.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
@@ -514,10 +513,5 @@ async def handle_text(client, message):
     # ── Default ──
     await message.reply("👇 Press the button below to start.", reply_markup=main_keyboard())
 
-async def main():
-    await app.start()
-    me = await app.get_me()
-    print(f"Bot is running as: {me.username}")
-    await asyncio.Future()
-
-asyncio.run(main())
+print("Bot is running...")
+app.run()
