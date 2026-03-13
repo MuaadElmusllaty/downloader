@@ -398,7 +398,8 @@ async def handle_text(client, message):
         try:
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 dl_info = ydl.extract_info(url, download=True)
-                filepath = f"/tmp/{dl_info['title']}.{fmt}"
+                filepath = ydl.prepare_filename(dl_info)
+                filepath = filepath.rsplit(".", 1)[0] + f".{fmt}"
             await msg.edit("📤 Uploading...")
             await message.reply_document(filepath, caption=f"🎵 {dl_info['title']}")
             os.remove(filepath)
