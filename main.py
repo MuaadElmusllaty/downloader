@@ -127,6 +127,7 @@ def get_playlist_info(url):
             "no_warnings": True,
             "logger": SILENT_LOGGER,
             "extract_flat": True,
+            "cookiefile": "/app/cookies.txt",
         }) as ydl:
             return ydl.extract_info(url, download=False)
     except Exception:
@@ -191,6 +192,7 @@ async def download_playlist(message, user_id, state, height=None, audio_fmt=None
                 "no_warnings": True,
                 "logger": SILENT_LOGGER,
                 "playlist_items": str(index),
+                "cookiefile": "/app/cookies.txt",
             }
         else:
             ydl_opts = {
@@ -200,6 +202,7 @@ async def download_playlist(message, user_id, state, height=None, audio_fmt=None
                 "no_warnings": True,
                 "logger": SILENT_LOGGER,
                 "playlist_items": str(index),
+                "cookiefile": "/app/cookies.txt",
                 "postprocessors": [{
                     "key": "FFmpegExtractAudio",
                     "preferredcodec": audio_fmt,
@@ -354,6 +357,7 @@ async def handle_text(client, message):
             "quiet": True,
             "no_warnings": True,
             "logger": SILENT_LOGGER,
+            "cookiefile": "/app/cookies.txt",
         }
 
         try:
