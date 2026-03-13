@@ -14,9 +14,9 @@ API_HASH = getenv("API_HASH")
 BOT_TOKEN = getenv("BOT_TOKEN")
 LOG_CHANNEL = getenv("LOG_CHANNEL")
 
-
 app = Client("mybot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
 
+COOKIES = "/app/cookies.txt"
 
 async def log_download(client, user_id, username, url):
     try:
@@ -28,6 +28,7 @@ async def log_download(client, user_id, username, url):
         )
     except Exception as e:
         print(f"✘ Failed to log download: {str(e)}")
+
 user_state = {}
 
 SILENT_LOGGER = type("L", (), {
@@ -98,14 +99,18 @@ def is_playlist(url):
     return "playlist?list=" in url
 
 def clean_url(url):
-    # strip &list= from single video urls
     if "watch?v=" in url and "&list=" in url:
         return url.split("&list=")[0]
     return url
 
 def get_info(url):
     try:
-        with yt_dlp.YoutubeDL({"quiet": True, "no_warnings": True, "logger": SILENT_LOGGER}) as ydl:
+        with yt_dlp.YoutubeDL({
+            "quiet": True,
+            "no_warnings": True,
+            "logger": SILENT_LOGGER,
+            "cookiefile": COOKIES,
+        }) as ydl:
             return ydl.extract_info(url, download=False)
     except yt_dlp.utils.DownloadError as e:
         error = str(e).lower()
@@ -127,7 +132,7 @@ def get_playlist_info(url):
             "no_warnings": True,
             "logger": SILENT_LOGGER,
             "extract_flat": True,
-            "cookiefile": "/app/cookies.txt",
+            "cookiefile": COOKIES,
         }) as ydl:
             return ydl.extract_info(url, download=False)
     except Exception:
@@ -180,19 +185,19 @@ async def download_playlist(message, user_id, state, height=None, audio_fmt=None
         if height:
             ydl_opts = {
                 "format": (
-                   f"bestvideo[height<={height}][vcodec^=av01]+bestaudio[ext=m4a]/"
-                   f"bestvideo[height<={height}][vcodec^=vp9]+bestaudio[ext=m4a]/"
-                   f"bestvideo[height<={height}]+bestaudio/"
-                   f"best[height<={height}]/"
-                   f"best"
-                  ),
+                    f"bestvideo[height<={height}][vcodec^=av01]+bestaudio[ext=m4a]/"
+                    f"bestvideo[height<={height}][vcodec^=vp9]+bestaudio[ext=m4a]/"
+                    f"bestvideo[height<={height}]+bestaudio/"
+                    f"best[height<={height}]/"
+                    f"best"
+                ),
                 "merge_output_format": "mp4",
                 "outtmpl": "/tmp/%(title)s.%(ext)s",
                 "quiet": True,
                 "no_warnings": True,
                 "logger": SILENT_LOGGER,
                 "playlist_items": str(index),
-                "cookiefile": "/app/cookies.txt",
+                "cookiefile": COOKIES,
             }
         else:
             ydl_opts = {
@@ -202,7 +207,7 @@ async def download_playlist(message, user_id, state, height=None, audio_fmt=None
                 "no_warnings": True,
                 "logger": SILENT_LOGGER,
                 "playlist_items": str(index),
-                "cookiefile": "/app/cookies.txt",
+                "cookiefile": COOKIES,
                 "postprocessors": [{
                     "key": "FFmpegExtractAudio",
                     "preferredcodec": audio_fmt,
@@ -268,7 +273,7 @@ async def handle_text(client, message):
         if not is_valid_youtube_url(text):
             await message.reply("✘ Invalid URL. Please send a valid YouTube link.")
             return
-        
+
         text = clean_url(text)
         print(f"Calling log_download for {user_id}")
         await log_download(client, user_id, message.from_user.username, text)
@@ -357,7 +362,7 @@ async def handle_text(client, message):
             "quiet": True,
             "no_warnings": True,
             "logger": SILENT_LOGGER,
-            "cookiefile": "/app/cookies.txt",
+            "cookiefile": COOKIES,
         }
 
         try:
@@ -393,6 +398,7 @@ async def handle_text(client, message):
             "quiet": True,
             "no_warnings": True,
             "logger": SILENT_LOGGER,
+            "cookiefile": COOKIES,
             "postprocessors": [{
                 "key": "FFmpegExtractAudio",
                 "preferredcodec": fmt,
