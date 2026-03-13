@@ -109,7 +109,6 @@ def get_info(url):
             "quiet": True,
             "no_warnings": True,
             "logger": SILENT_LOGGER,
-            "cookiefile": COOKIES,
         }) as ydl:
             return ydl.extract_info(url, download=False)
     except yt_dlp.utils.DownloadError as e:
