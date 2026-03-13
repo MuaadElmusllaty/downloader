@@ -185,12 +185,13 @@ async def download_playlist(message, user_id, state, height=None, audio_fmt=None
         if height:
             ydl_opts = {
                 "format": (
-                    f"bestvideo[height<={height}][vcodec^=av01]+bestaudio[ext=m4a]/"
-                    f"bestvideo[height<={height}][vcodec^=vp9]+bestaudio[ext=m4a]/"
-                    f"bestvideo[height<={height}]+bestaudio/"
-                    f"best[height<={height}]/"
-                    f"best"
-                ),
+                  f"bestvideo[height<={height}][vcodec^=av01]+bestaudio[ext=m4a]/"
+                  f"bestvideo[height<={height}][vcodec^=vp9]+bestaudio[ext=m4a]/"
+                  f"bestvideo[height<={height}]+bestaudio[ext=m4a]/"
+                  f"bestvideo[height<={height}]+bestaudio/"
+                  f"bestvideo+bestaudio/"
+                  f"best"
+                  ),
                 "merge_output_format": "mp4",
                 "outtmpl": "/tmp/%(title)s.%(ext)s",
                 "quiet": True,
@@ -350,13 +351,14 @@ async def handle_text(client, message):
         msg = await message.reply("⏳ Please wait...")
 
         ydl_opts = {
-            "format": (
-                f"bestvideo[height<={height}][vcodec^=av01]+bestaudio[ext=m4a]/"
-                f"bestvideo[height<={height}][vcodec^=vp9]+bestaudio[ext=m4a]/"
-                f"bestvideo[height<={height}]+bestaudio/"
-                f"best[height<={height}]/"
-                f"best"
-            ),
+           "format": (
+                  f"bestvideo[height<={height}][vcodec^=av01]+bestaudio[ext=m4a]/"
+                  f"bestvideo[height<={height}][vcodec^=vp9]+bestaudio[ext=m4a]/"
+                  f"bestvideo[height<={height}]+bestaudio[ext=m4a]/"
+                  f"bestvideo[height<={height}]+bestaudio/"
+                  f"bestvideo+bestaudio/"
+                  f"best"
+                  ),
             "merge_output_format": "mp4",
             "outtmpl": "/tmp/%(title)s.%(ext)s",
             "quiet": True,
