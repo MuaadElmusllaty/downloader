@@ -114,6 +114,7 @@ def get_info(url):
             return ydl.extract_info(url, download=False)
     except yt_dlp.utils.DownloadError as e:
         error = str(e).lower()
+        print(error)
         if "private" in error:
             return "private"
         elif "age" in error or "inappropriate" in error:
